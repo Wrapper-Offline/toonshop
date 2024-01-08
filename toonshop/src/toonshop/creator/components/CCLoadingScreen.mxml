@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%">
+
+	<s:VGroup verticalCenter="0" horizontalCenter="-1" horizontalAlign="center" gap="20">
+		<s:BitmapImage source="@Embed('../../images/preloader/logo.png')"/>
+		<s:Group>
+			<s:BitmapImage source="@Embed('../../images/preloader/barTrack.png')"/>
+			<s:BitmapImage source="@Embed('../../images/preloader/barFill.png')" smooth="true" verticalCenter="0" horizontalCenter="0"/>
+		</s:Group>
+	</s:VGroup>
+</s:Group>

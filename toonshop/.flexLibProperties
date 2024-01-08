@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="toonshop.creator.components.browser.BrowseUI"/>
+    <classEntry path="creator.interfaces.IBrowseUIContainer"/>
+    <classEntry path="toonshop.creator.controllers.MainUIController"/>
+    <classEntry path="toonshop.creator.interfaces.IMainUIContainer"/>
+    <classEntry path="toonshop.core.Theme"/>
+    <classEntry path="toonshop.core.Thumb"/>
+    <classEntry path="toonshop.core.CharThumb"/>
+    <classEntry path="toonshop.utils.UtilHashArray"/>
+    <classEntry path="toonshop.utils.UtilXmlInfo"/>
+    <classEntry path="toonshop.constants.AnimeConstants"/>
+    <classEntry path="toonshop.utils.UtilConsole"/>
+    <classEntry path="toonshop.core.cc_theme.CCTheme"/>
+    <classEntry path="toonshop.core.cc_theme.Color"/>
+    <classEntry path="toonshop.core.cc_theme.ComponentSelector"/>
+    <classEntry path="toonshop.core.cc_theme.Component"/>
+    <classEntry path="toonshop.core.cc_theme.Bodyshape"/>
+    <classEntry path="toonshop.core.XMLParser"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
