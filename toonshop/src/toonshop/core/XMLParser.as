@@ -2,9 +2,11 @@ package toonshop.core
 {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.utils.getQualifiedClassName;
 	import flash.utils.setTimeout;
 	
-	import toonshop.core.cc_theme.Color;
+	import toonshop.core.cc_theme.Bodyshape;
+	import toonshop.core.cc_theme.ColorThumb;
 	import toonshop.core.cc_theme.ComponentSelector;
 	import toonshop.events.CoreEvent;
 	import toonshop.utils.UtilConsole;
@@ -13,30 +15,36 @@ package toonshop.core
 	public class XMLParser extends EventDispatcher
 	{
 		public var id:String;
-		protected var _colors:UtilHashArray;
-		protected var _facials:UtilHashArray;
-		protected var _actions:UtilHashArray;
 		protected var acceptsNodes:Object;
+		protected var extractAttrs:Object;
 		private var _nodeIndex:int;
 		private var _totalNodes:int;
 		private var _nodes:XMLList;
 
 		public function XMLParser()
 		{
+			super();
 		}
 
 		/**
-		 * parses a theme xml 
-		 * @param xml theme xml
+		 * begins extracting information from the xml
+		 * @param xml
 		 */		
 		public function deSerialize(xml:XML) : void
 		{
 			// extract the main data
 			this.id = xml.@id;
+			for (var attr:String in this.extractAttrs) {
+				var value:String = xml.attribute(attr);
+				if (value != null) {
+					this[this.extractAttrs[attr]] = value;
+				}
+			}
+
 			this._nodes = xml.children();
 			this._totalNodes = this._nodes.length();
 			this._nodeIndex = 0;
-			UtilConsole.instance.log("Deserialize Theme XML nodes: " + this._totalNodes);
+			UtilConsole.instance.log("Deserialize "+getQualifiedClassName(this)+" XML nodes: " + this._totalNodes);
 			addEventListener(CoreEvent.DESERIALIZE_THEME_COMPLETE, this.onDeserializeComplete);
 			// start actually going through the assets
 			this.doNextPrepare();
@@ -45,7 +53,7 @@ package toonshop.core
 		/**
 		 * loops through 32 XML nodes, waits 5ms, and repeats itself
 		 */
-		private function doNextPrepare() : void
+		protected function doNextPrepare() : void
 		{
 			// check if we've gone through the entire xml
 			if (this._nodeIndex >= this._totalNodes) {
@@ -61,8 +69,8 @@ package toonshop.core
 		}
 		
 		/**
-		 * This is a heavily cut down version of the studio's deserializeThumb function.
-		 * This one is only capable of deserializing character thumbs.
+		 * Because this class isn't meant to be used on its own,
+		 * we'll just pass every XML node along to our subclass if it accepts it.
 		 */
 		private function passNodeToHandler(node:XML) : void
 		{
@@ -71,31 +79,12 @@ package toonshop.core
 				this.acceptsNodes[tagName](node);
 			}
 		}
-
-		protected function colorHandler(node:XML) : void
-		{
-			var color:Color = new Color();
-			color.deSerialize(node);
-			this._colors.push(color.id, color);
-		}
-
-		protected function compSelectorHandler(node:XML) : void
-		{
-			var tagName:String = String(node.name().localName);
-			var selector:ComponentSelector = new ComponentSelector();
-			selector.deSerialize(node);
-			if (tagName == "facial") {
-				this._facials.push(selector.id, selector);
-			} else if (tagName == "action") {
-				this._actions.push(selector.id, selector);
-			}
-		}
 		
 		/**
 		 * Dispatches an Event.COMPLETE Event.
 		 * @param event
 		 */		
-		private function onDeserializeComplete(event:CoreEvent) : void
+		protected function onDeserializeComplete(event:CoreEvent) : void
 		{
 			removeEventListener(CoreEvent.DESERIALIZE_THEME_COMPLETE, this.onDeserializeComplete);
 			dispatchEvent(new Event(Event.COMPLETE));

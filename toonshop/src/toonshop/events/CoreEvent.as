@@ -154,9 +154,9 @@ package toonshop.events
 		public static const TEXT_COMPONENT_LOADED:String = "textComponentLoaded";
 		
 		
-		public function CoreEvent(param1:String, param2:Object, param3:Object = null, param4:Boolean = false, param5:Boolean = false)
+		public function CoreEvent(param1:String, param2:Object, param3:Object = null, bubbles:Boolean = false, cancelable:Boolean = false)
 		{
-			super(param1,param2,param3,param4,param5);
+			super(param1,param2,param3,bubbles,cancelable);
 		}
 	}
 }

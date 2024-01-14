@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	width="75" height="100">
+
+	<fx:Script>
+		<![CDATA[
+			import toonshop.core.CharThumb;
+			import toonshop.utils.UtilConsole;
+
+			private var _data:CharThumb;
+
+			public function init(data:CharThumb) : void
+			{
+				this._data = data;
+				UtilConsole.instance.log(this._data.id + "seiofsf");
+				this.idLabel.text = this._data.id;
+			}
+		]]>
+	</fx:Script>
+
+	<s:Label id="idLabel"/>
+</s:Group>

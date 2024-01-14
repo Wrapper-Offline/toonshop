@@ -1,14 +1,16 @@
 package toonshop.creator.controllers
 {
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	
 	import toonshop.core.Theme;
-	import toonshop.core.cc_theme.Color;
+	import toonshop.core.cc_theme.ColorThumb;
 	import toonshop.creator.controllers.BrowseUIController;
 	import toonshop.creator.interfaces.IBrowseUIContainer;
 	import toonshop.creator.interfaces.IMainUIContainer;
 	import toonshop.managers.AppConfigManager;
+	import toonshop.managers.ThemeManager;
 	import toonshop.utils.UtilConsole;
-	import flash.events.EventDispatcher;
-	import flash.events.Event;
 
 	public class MainUIController extends EventDispatcher
 	{
@@ -17,7 +19,6 @@ package toonshop.creator.controllers
 		
 		private var themeId:String;
 		//private var ccTheme:CcTheme;
-		private var theme:Theme;
 		
 		private var mainUI:IMainUIContainer;
 		private var browseUI:IBrowseUIContainer;
@@ -42,7 +43,7 @@ package toonshop.creator.controllers
 			
 			// and now we can get things rolling
 			this.loadTheme(this.themeId);
-			
+			this.browserController = new BrowseUIController(this.browseUI);
 			
 			/*var _loc4_:String = _configManager.getValue(ServerConstants.PARAM_THEME_ID);
 			if (_loc4_ == null || _loc4_.length <= 0) {
@@ -101,9 +102,9 @@ package toonshop.creator.controllers
 		 */		
 		private function loadTheme(themeId:String) : void
 		{
-			this.theme = new Theme();
-			this.theme.addEventListener(Event.COMPLETE, this.onLoadThemeComplete);
-			this.theme.loadTheme(themeId);
+			var theme:Theme = new Theme();
+			theme.addEventListener(Event.COMPLETE, this.onLoadThemeComplete);
+			theme.loadTheme(themeId);
 		}
 		
 		/**
@@ -112,7 +113,11 @@ package toonshop.creator.controllers
 		 */		
 		private function onLoadThemeComplete(event:Event) : void
 		{
-			
+			var theme:Theme = event.target as Theme;
+			ThemeManager.instance.push(theme);
+			ThemeManager.instance.currentThemeId = theme.id;
+			this.browserController.init();
+			this.dispatchEvent(new Event(Event.COMPLETE));
 		}
 		
 		/**

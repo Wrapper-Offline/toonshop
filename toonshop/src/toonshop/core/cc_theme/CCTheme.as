@@ -9,23 +9,29 @@ package toonshop.core.cc_theme
 	import flash.utils.ByteArray;
 	
 	import toonshop.core.XMLParser;
+	import toonshop.events.CoreEvent;
 	import toonshop.utils.UtilConsole;
 	import toonshop.utils.UtilHashArray;
 
-	/**
-	 * designed to be extreeemely similar to Theme
-	 * could probably merge the two but i wanna see where this ends up
-	 */
 	public class CCTheme extends XMLParser
 	{
+		protected var _bodyshapes:UtilHashArray;
+		protected var _colors:UtilHashArray;
+		protected var _components:Object;
+		protected var _facials:UtilHashArray;
+
 		public function CCTheme()
 		{
 			super();
 			this.acceptsNodes = {
+				"bodyshape": this.bodyshapeHandler,
 				"color": this.colorHandler,
-				"facial": this.compSelectorHandler
+				"component": this.componentHandler,
+				"facial": this.facialHandler
 			};
+			this._bodyshapes = new UtilHashArray();
 			this._colors = new UtilHashArray();
+			this._components = {};
 			this._facials = new UtilHashArray();
 		}
 
@@ -57,6 +63,51 @@ package toonshop.core.cc_theme
 		private function onLoadThemeFail(e:Event) : void
 		{
 			UtilConsole.instance.error(new Error("An error has occured retrieving the CCTheme XML."));
+		}
+
+		protected function bodyshapeHandler(node:XML) : void
+		{
+			var bodyshape:Bodyshape = new Bodyshape();
+			bodyshape.addEventListener(CoreEvent.DESERIALIZE_THEME_COMPLETE, this.onBodyshapeComplete);
+			bodyshape.deSerialize(node);
+		}
+
+		private function onBodyshapeComplete(e:CoreEvent) : void
+		{
+			var bodyshape:Bodyshape = e.target as Bodyshape;
+			bodyshape.removeEventListener(CoreEvent.DESERIALIZE_THEME_COMPLETE, this.onBodyshapeComplete);
+			for (var type:String in bodyshape.components) {
+				if (this._components[type] == null) {
+					this._components[type] = new UtilHashArray();
+				}
+				this._components[type].insert(this._components[type].length, bodyshape.components[type]);
+			}
+			bodyshape.components = null;
+			this._bodyshapes.push(bodyshape.id, bodyshape);
+		}
+
+		protected function colorHandler(node:XML) : void
+		{
+			var color:ColorThumb = new ColorThumb();
+			color.deSerialize(node);
+			this._colors.push(color.id, color);
+		}
+
+		protected function componentHandler(node:XML) : void
+		{
+			var comp:ComponentThumb = new ComponentThumb();
+			comp.deSerialize(node);
+			if (this._components[comp.type] == null) {
+				this._components[comp.type] = new UtilHashArray();
+			}
+			this._components[comp.type].push(comp.id, comp);
+		}
+
+		protected function facialHandler(node:XML) : void
+		{
+			var selector:ComponentSelector = new ComponentSelector();
+			selector.deSerialize(node);
+			this._facials.push(selector.id, selector);
 		}
 
 		public function get colors() : UtilHashArray

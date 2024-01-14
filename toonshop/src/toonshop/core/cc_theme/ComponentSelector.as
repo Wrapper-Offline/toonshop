@@ -11,6 +11,7 @@ package toonshop.core.cc_theme
 		public var loop:Boolean;
 		public var totalFrames:int;
 		public var category:String;
+		public var bodyshape:String;
 		public var selections:Object = {};
 		
 		public function ComponentSelector()

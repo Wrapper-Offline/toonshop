@@ -10,7 +10,6 @@
 
 	<fx:Script>
 		<![CDATA[
-			
 			import toonshop.utils.UtilConsole;
 			import toonshop.creator.controllers.MainUIController;
 			import toonshop.creator.interfaces.IBrowseUIContainer;
@@ -79,7 +78,7 @@
 				MainUIController.init(this);
 				this.mainUIController = MainUIController.instance;
 				UtilConsole.instance.error("oh whoopsies i shat my pants");
-				//this.mainUIController.addEventListener(CcCoreEvent.LOAD_EVERYTHING_COMPLETE, this.loadComplete);
+				this.mainUIController.addEventListener(Event.COMPLETE, this.loadComplete);
 			}
 			
 			private function loadComplete(event:Event) : void

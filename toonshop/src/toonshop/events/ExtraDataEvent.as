@@ -6,31 +6,26 @@ package toonshop.events
 	{
 		
 		public static const UPDATE:String = "update";
-		
 		public static const PITCH_UPDATE:String = "pitch_update";
-		
 		public static const PROCESSING:String = "processing";
-		
-		
 		private var _data:Object;
+		private var _eventCreator:Object;
 		
-		private var _eventCreater:Object;
-		
-		public function ExtraDataEvent(param1:String, param2:Object, param3:Object = null, param4:Boolean = false, param5:Boolean = false)
+		public function ExtraDataEvent(param1:String, param2:Object, param3:Object = null, bubbles:Boolean = false, cancelable:Boolean = false)
 		{
-			super(param1,param4,param5);
+			super(param1, bubbles, cancelable);
 			this.setData(param3);
-			this.setEventCreater(param2);
+			this.setEventCreator(param2);
 		}
 		
-		public function getEventCreater() : Object
+		public function getEventCreator() : Object
 		{
-			return this._eventCreater;
+			return this._eventCreator;
 		}
 		
-		private function setEventCreater(param1:Object) : void
+		private function setEventCreator(param1:Object) : void
 		{
-			this._eventCreater = param1;
+			this._eventCreator = param1;
 		}
 		
 		public function getData() : Object
@@ -45,7 +40,7 @@ package toonshop.events
 		
 		override public function clone() : Event
 		{
-			return new ExtraDataEvent(this.type,this.getEventCreater(),this.getData(),this.bubbles,this.cancelable);
+			return new ExtraDataEvent(this.type, this.getEventCreator(), this.getData(), this.bubbles, this.cancelable);
 		}
 	}
 }

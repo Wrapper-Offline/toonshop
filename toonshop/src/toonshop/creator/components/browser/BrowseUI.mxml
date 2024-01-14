@@ -2,13 +2,20 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 implements="toonshop.creator.interfaces.IBrowseUIContainer">
+		 xmlns:browser="toonshop.creator.components.browser.*"
+		 implements="toonshop.creator.interfaces.IBrowseUIContainer"
+		 width="960" height="600">
 	
 	<fx:Script>
 		<![CDATA[
-			public function get ui_stockChars() : DataGroup
+			public function get ui_stockChars() : CharListBox
 			{
 				return this.stockChars;
+			}
+
+			public function get ui_customChars() : CharListBox
+			{
+				return this.customChars;
 			}
 		]]>
 	</fx:Script>
@@ -18,17 +25,24 @@
 			<s:SolidColor color="0xEEEEEE"/>
 		</s:fill>
 	</s:Rect>
-	<s:DataGroup id="stockChars" itemRenderer="spark.skins.spark.DefaultComplexItemRenderer">
-		<s:layout>
-			<s:TileLayout
-				horizontalGap="25"
-				verticalGap="20"
-				columnAlign="justifyUsingGap"
-				paddingRight="12"
-				paddingLeft="12"
-				useVirtualLayout="true"
-				orientation="rows"/>
-		</s:layout>
-	</s:DataGroup>
+	<s:HGroup width="100%" height="100%">
+		<s:Group>
+			<s:Rect width="100%" height="100%">
+				<s:fill>
+					<s:SolidColor color="0xEEEEEE"/>
+				</s:fill>
+			</s:Rect>
+			<s:Label text="new char/character info block"/>
+			<s:Line x="200" yFrom="0" yTo="100">
+				<s:stroke>
+					<s:SolidColorStroke color="0xE0E0E0"/>
+				</s:stroke>
+			</s:Line>
+		</s:Group>
+		<s:VGroup width="100%" height="100%" horizontalAlign="right" verticalAlign="middle">
+			<browser:CharListBox id="stockChars" title="Stock characters"/>
+			<browser:CharListBox id="customChars" title="Custom characters"/>
+		</s:VGroup>
+	</s:HGroup>
 	
 </s:Group>

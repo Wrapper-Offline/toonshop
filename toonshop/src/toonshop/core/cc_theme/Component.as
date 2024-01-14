@@ -7,11 +7,12 @@ package toonshop.core.cc_theme
 		public static var XML_NODE_NAME:String = "component";
 		public var id:String;
 		public var type:String;
-		public var path:String;
-		public var name:String;
-		public var thumb:String;
-		public var enabled:Boolean;
-		public var states:Object = {};
+		public var x:Number;
+		public var y:Number;
+		public var xScale:Number;
+		public var yScale:Number;
+		public var offset:Number;
+		public var rotation:Number;
 		
 		public function Component()
 		{
@@ -20,17 +21,14 @@ package toonshop.core.cc_theme
 		
 		public function deSerialize(xml:XML) : void
 		{
-			this.id = xml.@id;
+			this.id = xml.@component_id;
 			this.type = xml.@type;
-			this.path = xml.@path;
-			this.name = xml.@name;
-			this.thumb = xml.@thumb;
-			this.enabled = xml.@enable != "N";
-			
-			var states:XMLList = xml.state;
-			for each (var elem:XML in states) {
-				this.states[elem.@id] = elem.@filename;
-			}
+			this.x = xml.@x;
+			this.y = xml.@y;
+			this.xScale = xml.@xscale;
+			this.yScale = xml.@yscale;
+			this.offset = xml.@offset;
+			this.rotation = xml.@rotation;
 		}
 	}
 }

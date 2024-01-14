@@ -17,25 +17,27 @@ package toonshop.core
 	import toonshop.utils.UtilHashArray;
 	import toonshop.core.cc_theme.CCTheme;
 	
-	public class Theme extends EventDispatcher
+	public class Theme extends XMLParser
 	{
+		public var ccThemeId:String = "";
+		public var name:String;
 		public var ccTheme:CCTheme;
-		private var _id:String;
-		private var _ccThemeId:String = "";
-		private var _name:String;
 		private var _backgroundThumbs:UtilHashArray;
 		private var _charThumbs:UtilHashArray;
 		private var _bubbleThumbs:UtilHashArray;
 		private var _propThumbs:UtilHashArray;
 		private var _soundThumbs:UtilHashArray;
 		private var _effectThumbs:UtilHashArray;
-		private var _nodeIndex:int;
-		private var _totalNodes:int;
-		private var _nodes:XMLList;
 		
 		public function Theme()
 		{
-			super();
+			this.acceptsNodes = {
+				"char": this.charThumbHandler
+			};
+			this.extractAttrs = {
+				"name": "name",
+				"cc_theme_id": "ccThemeId"
+			};
 			this._backgroundThumbs = new UtilHashArray();
 			this._charThumbs = new UtilHashArray();
 			this._bubbleThumbs = new UtilHashArray();
@@ -59,27 +61,7 @@ package toonshop.core
 
 		public function get isCCTheme() : Boolean
 		{
-			return this._ccThemeId != "";
-		}
-
-		public function get ccThemeId() : String
-		{
-			return this._ccThemeId;
-		}
-
-		public function set id(id:String) : void
-		{
-			this._id = id;
-		}
-
-		public function get id() : String
-		{
-			return this._id;
-		}
-
-		public function get name() : String
-		{
-			return this._name;
+			return this.ccThemeId != "";
 		}
 
 		public function get charThumbs() : UtilHashArray
@@ -117,58 +99,16 @@ package toonshop.core
 		{
 			UtilConsole.instance.error(new Error("An error has occured retrieving the Theme ZIP."));
 		}
-		
-		/**
-		 * parses a theme xml 
-		 * @param xml theme xml
-		 */		
-		public function deSerialize(xml:XML) : void
-		{
-			// extract the main data
-			this.id = xml.@id;
-			this._ccThemeId = xml.@cc_theme_id;
-			this._nodes = xml.children();
-			this._totalNodes = this._nodes.length();
-			this._nodeIndex = 0;
-			UtilConsole.instance.log("Deserialize Theme XML nodes: " + this._totalNodes);
-			addEventListener(CoreEvent.DESERIALIZE_THEME_COMPLETE, this.onDeserializeComplete);
-			// start actually going through the assets
-			this.doNextPrepare();
-		}
-		
-		/**
-		 * loops through 32 XML nodes, waits 5ms, and repeats itself
-		 */
-		private function doNextPrepare() : void
-		{
-			// check if we've gone through the entire xml
-			if (this._nodeIndex >= this._totalNodes) {
-				dispatchEvent(new CoreEvent(CoreEvent.DESERIALIZE_THEME_COMPLETE, this));
-				return;
-			}
-			var stopAt:int = this._nodeIndex + 32;
-			while (this._nodeIndex < stopAt && this._nodeIndex < this._totalNodes) {
-				this.deserializeThumb(this._nodes[this._nodeIndex]);
-				++this._nodeIndex;
-			}
-			setTimeout(this.doNextPrepare, 5);
-		}
 
 		/**
 		 * This is a heavily cut down version of the studio's deserializeThumb function.
 		 * This one is only capable of deserializing character thumbs.
 		 */
-		private function deserializeThumb(node:XML) : void
+		private function charThumbHandler(node:XML) : void
 		{
-			var tagName:String = String(node.name().localName);
-			switch (tagName) {
-				case CharThumb.XML_NODE_NAME: {
-					var thumb:CharThumb = new CharThumb();
-					thumb.deserialize(node);
-					this._charThumbs.push(thumb.id, thumb);
-					break;
-				}
-			}
+			var thumb:CharThumb = new CharThumb();
+			thumb.deserialize(node);
+			this._charThumbs.push(thumb.id, thumb);
 		}
 
 		/**
@@ -177,15 +117,16 @@ package toonshop.core
 		 * When all required deserializations are done, it dispatches an Event.COMPLETE Event.
 		 * @param event
 		 */		
-		private function onDeserializeComplete(event:CoreEvent) : void
+		override protected function onDeserializeComplete(event:CoreEvent) : void
 		{
 			removeEventListener(CoreEvent.DESERIALIZE_THEME_COMPLETE, this.onDeserializeComplete);
 			// nvm we're not done we still have to parse the cctheme
-			if (this._ccThemeId)
+			if (this.ccThemeId)
 			{
 				this.ccTheme = new CCTheme();
 				this.ccTheme.addEventListener(Event.COMPLETE, this.onLoadCCThemeComplete);
 				this.ccTheme.loadTheme(this.ccThemeId);
+				return;
 			}
 			dispatchEvent(new Event(Event.COMPLETE));
 		}

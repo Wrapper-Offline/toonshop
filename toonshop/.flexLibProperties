@@ -13,11 +13,18 @@
     <classEntry path="toonshop.constants.AnimeConstants"/>
     <classEntry path="toonshop.utils.UtilConsole"/>
     <classEntry path="toonshop.core.cc_theme.CCTheme"/>
-    <classEntry path="toonshop.core.cc_theme.Color"/>
+    <classEntry path="toonshop.core.cc_theme.ColorThumb"/>
     <classEntry path="toonshop.core.cc_theme.ComponentSelector"/>
-    <classEntry path="toonshop.core.cc_theme.Component"/>
+    <classEntry path="toonshop.core.cc_theme.ComponentThumb"/>
     <classEntry path="toonshop.core.cc_theme.Bodyshape"/>
     <classEntry path="toonshop.core.XMLParser"/>
+    <classEntry path="toonshop.core.CCChar"/>
+    <classEntry path="toonshop.core.cc_theme.Color"/>
+    <classEntry path="toonshop.core.cc_theme.Component"/>
+    <classEntry path="toonshop.events.ThemeParserEvent"/>
+    <classEntry path="toonshop.managers.ThemeManager"/>
+    <classEntry path="toonshop.creator.components.browser.CharThumbnail"/>
+    <classEntry path="toonshop.creator.components.browser.CharListBox"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
