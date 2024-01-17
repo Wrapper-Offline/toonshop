@@ -1,7 +1,5 @@
-package toonshop.core.cc_theme
+package toonshop.cc_theme
 {
-	import flash.xml.XMLNode;
-	
 	public class Component
 	{
 		public static var XML_NODE_NAME:String = "component";

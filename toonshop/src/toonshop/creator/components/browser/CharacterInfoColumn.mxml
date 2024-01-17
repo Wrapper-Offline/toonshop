@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Group
+<s:VGroup
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx"
-	width="75" height="100">
+	xmlns:browser="toonshop.creator.components.browser.*"
+	width="292" minHeight="400">
 
 	<fx:Script>
 		<![CDATA[
 			import toonshop.theme.CharThumb;
 			import toonshop.utils.UtilConsole;
-
+			
 			private var _data:CharThumb;
-
+			
 			public function init(data:CharThumb) : void
 			{
 				this._data = data;
-				this.idLabel.text = this._data.id;
+				this.charName.text = this.data.name;
 			}
 
+			public function clear() : void
+			{
+				this._data = null;
+			}
+			
 			public function get data() : CharThumb
 			{
 				return this._data;
@@ -25,5 +31,7 @@
 		]]>
 	</fx:Script>
 
-	<s:Label id="idLabel"/>
-</s:Group>
+	<s:Label id="charName" fontSize="15" fontWeight="bold" textAlign="center"/>
+	<browser:CharThumbnail id="charThumb"/>
+
+</s:VGroup>

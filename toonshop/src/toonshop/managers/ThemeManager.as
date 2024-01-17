@@ -1,12 +1,14 @@
 package toonshop.managers
 {
-	import toonshop.core.Theme;
+	import toonshop.theme.Theme;
+	import toonshop.cc_theme.CCTheme;
 	import toonshop.utils.UtilHashArray;
 
 	public class ThemeManager
 	{
 		private static var __instance:ThemeManager;
 		private var _themes:UtilHashArray;
+		private var _ccThemes:UtilHashArray;
 		private var _currentThemeId:String;
 
 		public function ThemeManager()
@@ -16,8 +18,7 @@ package toonshop.managers
 
 		public static function get instance() : ThemeManager
 		{
-			if (!__instance)
-			{
+			if (!__instance) {
 				__instance = new ThemeManager();
 			}
 			return __instance;
@@ -27,10 +28,9 @@ package toonshop.managers
 		 * adds a theme to the theme list
 		 * @param theme
 		 */
-		public function push(theme:Theme) : void
+		public function pushTheme(theme:Theme) : void
 		{
-			if (theme.id == null)
-			{
+			if (theme.id == null) {
 				throw new Error("Expected theme to have an ID.");
 			}
 			this._themes.push(theme.id, theme);
@@ -40,15 +40,57 @@ package toonshop.managers
 		 * returns a single theme from the theme list
 		 * @param id the theme id
 		 */
-		public function get(id:String) : Theme
+		public function getTheme(id:String) : Theme
 		{
 			return this._themes.getValueByKey(id);
 		}
 
+		/**
+		 * returns the currently selected theme
+		 */
+		public function get currentTheme() : Theme
+		{
+			if (this._currentThemeId != null) {
+				return this.themes.getValueByKey(this.currentThemeId);
+			}
+			return null;
+		}
+
+		/**
+		 * adds a cc theme
+		 * @param theme
+		 */
+		public function pushCCTheme(ccTheme:CCTheme) : void
+		{
+			if (ccTheme.id == null) {
+				throw new Error("Expected ccTheme to have an ID.");
+			}
+			this._themes.push(ccTheme.id, ccTheme);
+		}
+
+		/**
+		 * returns a cc theme
+		 * @param id the cc theme id
+		 */
+		public function getCCTheme(id:String) : Theme
+		{
+			return this._themes.getValueByKey(id);
+		}
+
+		/**
+		 * returns the currently selected theme's cc theme
+		 */
+		public function get currentCCTheme() : Theme
+		{
+			if (this._currentThemeId != null) {
+				return this.ccThemes.getValueByKey(this.currentTheme.ccThemeId);
+			}
+			return null;
+		}
+
 		public function set currentThemeId(id:String) : void
 		{
-			if (!this.themes.containsKey(id))
-			{
+			if (!this.themes.containsKey(id)) {
 				throw new Error("Specified theme ID doesn't exist in ThemeManager.");
 			}
 			this._currentThemeId = id;
@@ -59,18 +101,14 @@ package toonshop.managers
 			return this._currentThemeId;
 		}
 
-		public function get currentTheme() : Theme
-		{
-			if (this._currentThemeId != null)
-			{
-				return this.themes.getValueByKey(this.currentThemeId);
-			}
-			return null;
-		}
-
 		public function get themes() : UtilHashArray
 		{
 			return this._themes;
+		}
+
+		public function get ccThemes() : UtilHashArray
+		{
+			return this._ccThemes;
 		}
 	}
 }

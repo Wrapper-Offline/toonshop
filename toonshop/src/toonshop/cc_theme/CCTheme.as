@@ -1,6 +1,7 @@
-package toonshop.core.cc_theme
+package toonshop.cc_theme
 {
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
@@ -8,27 +9,21 @@ package toonshop.core.cc_theme
 	import flash.net.URLVariables;
 	import flash.utils.ByteArray;
 	
-	import toonshop.core.XMLParser;
-	import toonshop.events.CoreEvent;
 	import toonshop.utils.UtilConsole;
 	import toonshop.utils.UtilHashArray;
 
-	public class CCTheme extends XMLParser
+	public class CCTheme extends EventDispatcher
 	{
 		protected var _bodyshapes:UtilHashArray;
 		protected var _colors:UtilHashArray;
 		protected var _components:Object;
 		protected var _facials:UtilHashArray;
+		private var _id:String;
+		private var _isV2:Boolean = false;
 
 		public function CCTheme()
 		{
 			super();
-			this.acceptsNodes = {
-				"bodyshape": this.bodyshapeHandler,
-				"color": this.colorHandler,
-				"component": this.componentHandler,
-				"facial": this.facialHandler
-			};
 			this._bodyshapes = new UtilHashArray();
 			this._colors = new UtilHashArray();
 			this._components = {};
@@ -52,7 +47,7 @@ package toonshop.core.cc_theme
 			loader.dataFormat = URLLoaderDataFormat.BINARY;
 			loader.load(req);
 		}
-		
+
 		private function onLoadThemeSuccess(e:Event) : void
 		{
 			var loader:URLLoader = e.target as URLLoader;
@@ -65,49 +60,62 @@ package toonshop.core.cc_theme
 			UtilConsole.instance.error(new Error("An error has occured retrieving the CCTheme XML."));
 		}
 
-		protected function bodyshapeHandler(node:XML) : void
+		public function deSerialize(xml:XML) : void
 		{
-			var bodyshape:Bodyshape = new Bodyshape();
-			bodyshape.addEventListener(CoreEvent.DESERIALIZE_THEME_COMPLETE, this.onBodyshapeComplete);
-			bodyshape.deSerialize(node);
+			this._id = xml.@id;
+			if (xml.@version == "2.0") {
+				this._isV2 = true;
+			}
+
+			var node:XML;
+			for each (node in xml.elements("color")) {
+				var color:Color = new Color();
+				color.deSerialize(node);
+				this._colors.push(color.id, color);
+			}
+			for each (node in xml.elements(Component.XML_NODE_NAME)) {
+				var comp:ComponentThumb = new ComponentThumb();
+				comp.deSerialize(node);
+				if (this._components[comp.type] == null) {
+					this._components[comp.type] = new UtilHashArray();
+				}
+				this._components[comp.type].push(comp.id, comp);
+			}
+			for each (node in xml.elements(Bodyshape.XML_NODE_NAME)) {
+				var bodyshape:Bodyshape = new Bodyshape();
+				bodyshape.addEventListener(Event.COMPLETE, this.onBodyshapeComplete);
+				bodyshape.deSerialize(node);
+			}
+			for each (node in xml.elements("facial")) {
+				var selector:ComponentSelector = new ComponentSelector();
+				selector.deSerialize(node);
+				this._facials.push(selector.id, selector);
+			}
+			this.dispatchEvent(new Event(Event.COMPLETE));
 		}
 
-		private function onBodyshapeComplete(e:CoreEvent) : void
+		private function onBodyshapeComplete(e:Event) : void
 		{
 			var bodyshape:Bodyshape = e.target as Bodyshape;
-			bodyshape.removeEventListener(CoreEvent.DESERIALIZE_THEME_COMPLETE, this.onBodyshapeComplete);
+			bodyshape.removeEventListener(Event.COMPLETE, this.onBodyshapeComplete);
 			for (var type:String in bodyshape.components) {
 				if (this._components[type] == null) {
 					this._components[type] = new UtilHashArray();
 				}
 				this._components[type].insert(this._components[type].length, bodyshape.components[type]);
 			}
-			bodyshape.components = null;
+			bodyshape.clearComponents();
 			this._bodyshapes.push(bodyshape.id, bodyshape);
 		}
 
-		protected function colorHandler(node:XML) : void
+		public function get id() : String
 		{
-			var color:ColorThumb = new ColorThumb();
-			color.deSerialize(node);
-			this._colors.push(color.id, color);
+			return this._id;
 		}
 
-		protected function componentHandler(node:XML) : void
+		public function get isV2() : Boolean
 		{
-			var comp:ComponentThumb = new ComponentThumb();
-			comp.deSerialize(node);
-			if (this._components[comp.type] == null) {
-				this._components[comp.type] = new UtilHashArray();
-			}
-			this._components[comp.type].push(comp.id, comp);
-		}
-
-		protected function facialHandler(node:XML) : void
-		{
-			var selector:ComponentSelector = new ComponentSelector();
-			selector.deSerialize(node);
-			this._facials.push(selector.id, selector);
+			return this._isV2;
 		}
 
 		public function get colors() : UtilHashArray

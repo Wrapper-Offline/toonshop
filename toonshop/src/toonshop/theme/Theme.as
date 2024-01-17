@@ -1,4 +1,4 @@
-package toonshop.core
+package toonshop.theme
 {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -8,20 +8,19 @@ package toonshop.core
 	import flash.net.URLRequest;
 	import flash.net.URLVariables;
 	import flash.utils.ByteArray;
-	import flash.utils.setTimeout;
 	
 	import nochump.util.zip.ZipFile;
 	
-	import toonshop.events.CoreEvent;
+	import toonshop.cc_theme.CCTheme;
+	import toonshop.managers.ThemeManager;
 	import toonshop.utils.UtilConsole;
 	import toonshop.utils.UtilHashArray;
-	import toonshop.core.cc_theme.CCTheme;
 	
-	public class Theme extends XMLParser
+	public class Theme extends EventDispatcher
 	{
-		public var ccThemeId:String = "";
-		public var name:String;
-		public var ccTheme:CCTheme;
+		private var _id:String;
+		private var _ccThemeId:String = "";
+		private var _name:String;
 		private var _backgroundThumbs:UtilHashArray;
 		private var _charThumbs:UtilHashArray;
 		private var _bubbleThumbs:UtilHashArray;
@@ -31,13 +30,6 @@ package toonshop.core
 		
 		public function Theme()
 		{
-			this.acceptsNodes = {
-				"char": this.charThumbHandler
-			};
-			this.extractAttrs = {
-				"name": "name",
-				"cc_theme_id": "ccThemeId"
-			};
 			this._backgroundThumbs = new UtilHashArray();
 			this._charThumbs = new UtilHashArray();
 			this._bubbleThumbs = new UtilHashArray();
@@ -57,16 +49,6 @@ package toonshop.core
 			this._effectThumbs.removeAll();
 			this._soundThumbs.removeAll();
 			this._bubbleThumbs.removeAll();
-		}
-
-		public function get isCCTheme() : Boolean
-		{
-			return this.ccThemeId != "";
-		}
-
-		public function get charThumbs() : UtilHashArray
-		{
-			return this._charThumbs;
 		}
 
 		/**
@@ -100,15 +82,18 @@ package toonshop.core
 			UtilConsole.instance.error(new Error("An error has occured retrieving the Theme ZIP."));
 		}
 
-		/**
-		 * This is a heavily cut down version of the studio's deserializeThumb function.
-		 * This one is only capable of deserializing character thumbs.
-		 */
-		private function charThumbHandler(node:XML) : void
+		public function deSerialize(xml:XML) : void
 		{
-			var thumb:CharThumb = new CharThumb();
-			thumb.deserialize(node);
-			this._charThumbs.push(thumb.id, thumb);
+			this._id = xml.@id;
+			this._name = xml.@name;
+			this._ccThemeId = xml.@cc_theme_id;
+			var node:XML;
+			for each (node in xml.elements("char")) {
+				var charThumb:CharThumb = new CharThumb();
+				charThumb.deserialize(node);
+				this.addThumb(charThumb);
+			}
+			this.onDeserializeComplete();
 		}
 
 		/**
@@ -117,15 +102,13 @@ package toonshop.core
 		 * When all required deserializations are done, it dispatches an Event.COMPLETE Event.
 		 * @param event
 		 */		
-		override protected function onDeserializeComplete(event:CoreEvent) : void
+		protected function onDeserializeComplete() : void
 		{
-			removeEventListener(CoreEvent.DESERIALIZE_THEME_COMPLETE, this.onDeserializeComplete);
 			// nvm we're not done we still have to parse the cctheme
-			if (this.ccThemeId)
-			{
-				this.ccTheme = new CCTheme();
-				this.ccTheme.addEventListener(Event.COMPLETE, this.onLoadCCThemeComplete);
-				this.ccTheme.loadTheme(this.ccThemeId);
+			if (this.ccThemeId) {
+				var ccTheme:CCTheme = new CCTheme();
+				ccTheme.addEventListener(Event.COMPLETE, this.onLoadCCThemeComplete);
+				ccTheme.loadTheme(this.ccThemeId);
 				return;
 			}
 			dispatchEvent(new Event(Event.COMPLETE));
@@ -133,6 +116,8 @@ package toonshop.core
 
 		private function onLoadCCThemeComplete(e:Event) : void
 		{
+			var ccTheme:CCTheme = e.target as CCTheme;
+			ThemeManager.instance.pushCCTheme(ccTheme);
 			dispatchEvent(new Event(Event.COMPLETE));
 		}
 
@@ -141,15 +126,37 @@ package toonshop.core
 		 */
 		public function addThumb(thumb:Thumb) : void
 		{
-			var charThumb:CharThumb = null;
-			if (thumb is CharThumb)
-			{
-				/*charThumb = this._charThumbs.getValueByKey(thumb.id) as CharThumb;
-				if (!charThumb)
-				{
-				this._charThumbs.push(thumb.id, thumb);
-				}*/
+			if (thumb is CharThumb) {
+				var charThumb:CharThumb = this._charThumbs.getValueByKey(thumb.id) as CharThumb;
+				if (!charThumb) {
+					this._charThumbs.push(thumb.id, thumb);
+				}
 			}
+		}
+
+		public function get id() : String
+		{
+			return this._id;
+		}
+		
+		public function get ccThemeId() : String
+		{
+			return this._ccThemeId;
+		}
+		
+		public function get name() : String
+		{
+			return this._name;
+		}
+		
+		public function get hasCCTheme() : Boolean
+		{
+			return this.ccThemeId != "";
+		}
+		
+		public function get charThumbs() : UtilHashArray
+		{
+			return this._charThumbs;
 		}
 	}
 }

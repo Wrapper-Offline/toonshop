@@ -1,4 +1,4 @@
-package toonshop.core
+package toonshop.theme
 {
 	import toonshop.utils.UtilHashArray;
 	import flash.display.DisplayObject;
@@ -14,6 +14,11 @@ package toonshop.core
 		public function Thumb()
 		{
 			super();
+		}
+
+		public function get id() : String
+		{
+			return this._id;
 		}
 	}
 }

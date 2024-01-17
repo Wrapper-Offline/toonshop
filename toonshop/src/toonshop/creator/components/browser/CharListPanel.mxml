@@ -3,31 +3,35 @@
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx"
+	skinClass="toonshop.creator.skins.browser.CharListPanelSkin"
 	width="400" height="280">
 
 	<s:Rect width="100%" height="100%">
 		<s:fill>
-			<s:SolidColor color="0xF5F5F5"/>
+			<s:SolidColor color="#f2f2f2"/>
 		</s:fill>
-		<s:stroke>
-			<s:SolidColorStroke color="0xC8C8C8"/>
-		</s:stroke>
+		<s:filters>
+			<s:DropShadowFilter inner="true" angle="90" blurX="5" blurY="10" alpha="0.15" distance="2"/>
+		</s:filters>
 	</s:Rect>
 	<s:DataGroup id="charDataGroup" itemRenderer="spark.skins.spark.DefaultComplexItemRenderer"
-		clipAndEnableScrolling="true"
-		width="100%"
-		height="300">
+		clipAndEnableScrolling="true" width="100%" height="100%">
 		<s:layout>
 			<s:TileLayout
 				horizontalGap="5"
-				verticalGap="5"
+				verticalGap="26"
 				columnAlign="justifyUsingGap"
+				paddingTop="5"
 				paddingRight="6"
+				paddingBottom="5"
 				paddingLeft="6"
 				useVirtualLayout="true"
 				orientation="columns"/>
 		</s:layout>
 	</s:DataGroup>
-	<s:HScrollBar bottom="0" width="100%" viewport="{charDataGroup}"/>
+
+	<s:controlBarContent>
+		<s:HScrollBar bottom="0" width="100%" viewport="{charDataGroup}" height="20"/>
+	</s:controlBarContent>
 
 </s:Panel>

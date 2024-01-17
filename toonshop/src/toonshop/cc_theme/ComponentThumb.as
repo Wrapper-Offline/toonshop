@@ -1,4 +1,4 @@
-package toonshop.core.cc_theme
+package toonshop.cc_theme
 {
 	import flash.xml.XMLNode;
 	

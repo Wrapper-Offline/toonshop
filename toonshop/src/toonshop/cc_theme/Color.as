@@ -1,8 +1,8 @@
-package toonshop.core.cc_theme
+package toonshop.cc_theme
 {
 	import flash.xml.XMLNode;
 
-	public class ColorThumb
+	public class Color
 	{
 		public static var XML_NODE_NAME:String = "color";
 		public var id:String;
@@ -15,7 +15,7 @@ package toonshop.core.cc_theme
 		public var enabled:Boolean;
 		public var presets:Vector.<String> = new Vector.<String>;
 
-		public function ColorThumb()
+		public function Color()
 		{
 			super();
 		}

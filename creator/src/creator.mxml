@@ -101,14 +101,14 @@
 		s|Application
 		{
 			font-size: 13;
-		}
+		}*/
 		s|HScrollBar
 		{
-			skinClass: ClassReference("anifire.creator.skins.DefaultHScrollBarSkin");
+			skinClass: ClassReference("toonshop.skins.DefaultHScrollBarSkin");
 		}
 		s|VScrollBar
 		{
-			skinClass: ClassReference("anifire.creator.skins.DefaultVScrollBarSkin");
+			skinClass: ClassReference("toonshop.skins.DefaultVScrollBarSkin");
 		}
 		s|TextBase,
 		s|SkinnableTextBase,
@@ -121,10 +121,10 @@
 		}
 		s|Label#promptDisplay
 		{
-			color: #CCCCCC;
+			color: #cccccc;
 			fontStyle: "normal";
 		}
-		s|RichText#errorTextDisplay
+		/*s|RichText#errorTextDisplay
 		{
 			fontSize: 11;
 		}

@@ -5,17 +5,42 @@
 		 xmlns:browser="toonshop.creator.components.browser.*"
 		 implements="toonshop.creator.interfaces.IBrowseUIContainer"
 		 width="960" height="600">
+
+	<fx:Declarations>
+		<s:Resize id="infoBlockIn" target="{infoBlock}" widthFrom="0" widthTo="300" duration="500"/>
+		<s:Resize id="infoBlockOut" target="{infoBlock}" widthFrom="300" widthTo="0" duration="500"/>
+	</fx:Declarations>
 	
 	<fx:Script>
 		<![CDATA[
-			public function get ui_stockChars() : CharListBox
+			public function get ui_charInfoCol() : CharacterInfoColumn
+			{
+				return this.charInfoCol;
+			}
+
+			public function get ui_stockChars() : CharListPanel
 			{
 				return this.stockChars;
 			}
 
-			public function get ui_customChars() : CharListBox
+			public function get ui_customChars() : CharListPanel
 			{
 				return this.customChars;
+			}
+
+			public function get ui_panelHeightDragger() : Button
+			{
+				return this.panelHeightDragger;
+			}
+
+			public function get tr_infoBlockIn() : Resize
+			{
+				return this.infoBlockIn;
+			}
+
+			public function get tr_infoBlockOut() : Resize
+			{
+				return this.infoBlockOut;
 			}
 		]]>
 	</fx:Script>
@@ -25,23 +50,21 @@
 			<s:SolidColor color="0xEEEEEE"/>
 		</s:fill>
 	</s:Rect>
-	<s:HGroup width="100%" height="100%">
-		<s:Group>
-			<s:Rect width="100%" height="100%">
-				<s:fill>
-					<s:SolidColor color="0xEEEEEE"/>
-				</s:fill>
-			</s:Rect>
-			<s:Label text="new char/character info block"/>
-			<s:Line x="200" yFrom="0" yTo="100">
+	<s:HGroup width="100%" height="100%"
+		paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10">
+		<s:HGroup id="infoBlock" width="0" clipAndEnableScrolling="true" height="100%">
+			<browser:CharacterInfoColumn id="charInfoCol" height="100%"/>
+			<s:Rect height="100%">
 				<s:stroke>
-					<s:SolidColorStroke color="0xE0E0E0"/>
+					<s:SolidColorStroke color="#cccccc"/>
 				</s:stroke>
-			</s:Line>
-		</s:Group>
-		<s:VGroup width="100%" height="100%" horizontalAlign="right" verticalAlign="middle">
-			<browser:CharListBox id="stockChars" title="Stock characters"/>
-			<browser:CharListBox id="customChars" title="Custom characters"/>
+			</s:Rect>
+		</s:HGroup>
+		<s:VGroup width="100%" height="100%" horizontalAlign="right">
+			<browser:CharListPanel id="stockChars" title="Stock characters" width="100%"/>
+			<s:Button id="panelHeightDragger" height="16" width="100%"
+				skinClass="toonshop.creator.skins.browser.PanelHeightDraggerSkin"/>
+			<browser:CharListPanel id="customChars" title="Custom characters" width="100%"/>
 		</s:VGroup>
 	</s:HGroup>
 	

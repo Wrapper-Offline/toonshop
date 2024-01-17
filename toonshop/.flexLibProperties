@@ -5,26 +5,27 @@
     <classEntry path="creator.interfaces.IBrowseUIContainer"/>
     <classEntry path="toonshop.creator.controllers.MainUIController"/>
     <classEntry path="toonshop.creator.interfaces.IMainUIContainer"/>
-    <classEntry path="toonshop.core.Theme"/>
-    <classEntry path="toonshop.core.Thumb"/>
-    <classEntry path="toonshop.core.CharThumb"/>
+    <classEntry path="toonshop.theme.Theme"/>
+    <classEntry path="toonshop.theme.Thumb"/>
+    <classEntry path="toonshop.theme.CharThumb"/>
     <classEntry path="toonshop.utils.UtilHashArray"/>
     <classEntry path="toonshop.utils.UtilXmlInfo"/>
     <classEntry path="toonshop.constants.AnimeConstants"/>
     <classEntry path="toonshop.utils.UtilConsole"/>
-    <classEntry path="toonshop.core.cc_theme.CCTheme"/>
-    <classEntry path="toonshop.core.cc_theme.ColorThumb"/>
-    <classEntry path="toonshop.core.cc_theme.ComponentSelector"/>
-    <classEntry path="toonshop.core.cc_theme.ComponentThumb"/>
-    <classEntry path="toonshop.core.cc_theme.Bodyshape"/>
-    <classEntry path="toonshop.core.XMLParser"/>
-    <classEntry path="toonshop.core.CCChar"/>
-    <classEntry path="toonshop.core.cc_theme.Color"/>
-    <classEntry path="toonshop.core.cc_theme.Component"/>
-    <classEntry path="toonshop.events.ThemeParserEvent"/>
+    <classEntry path="toonshop.cc_theme.CCTheme"/>
+    <classEntry path="toonshop.cc_theme.Color"/>
+    <classEntry path="toonshop.cc_theme.ComponentSelector"/>
+    <classEntry path="toonshop.cc_theme.ComponentThumb"/>
+    <classEntry path="toonshop.cc_theme.Bodyshape"/>
+    <classEntry path="toonshop.cc.CCChar"/>
+    <classEntry path="toonshop.cc_theme.Component"/>
+    <classEntry path="toonshop.events.XMLParserEvent"/>
     <classEntry path="toonshop.managers.ThemeManager"/>
     <classEntry path="toonshop.creator.components.browser.CharThumbnail"/>
-    <classEntry path="toonshop.creator.components.browser.CharListBox"/>
+    <classEntry path="toonshop.creator.components.browser.CharListPanel"/>
+    <classEntry path="toonshop.creator.skins.browser.CharListPanelSkin"/>
+    <classEntry path="toonshop.creator.components.browser.CharacterInfoColumn"/>
+    <classEntry path="toonshop.creator.skins.browser.PanelHeightDraggerSkin"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

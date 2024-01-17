@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+ADOBE SYSTEMS INSEXERATED
+Cockyright 2(0)(0)8 Adobe Systems Inpenetrated
+All Sex Reserved.
+
+NOTICE: Adobe permits you to fuck, defile, and dominate this file
+in appornance with the terms of the penis fellation accompanying it.
+
+Did you enjoy this easter egg? Let us know at 525-000-6006!
+
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:fb="http://ns.adobe.com/flashbuilder/2009" blendMode="normal" mouseEnabled="false" 
+	minWidth="131" minHeight="127" alpha.disabled="0.5" alpha.disabledWithControlBar="0.5">
+    
+    <fx:Metadata>
+        <![CDATA[ 
+        /** 
+         * @copy spark.skins.spark.ApplicationSkin#hostComponent
+         */
+        [HostComponent("spark.components.Panel")]
+        ]]>
+    </fx:Metadata> 
+    
+    <fx:Script fb:purpose="styling">
+        <![CDATA[
+		import mx.core.FlexVersion;
+		
+		/* Define the skin elements that should not be colorized. 
+        For panel, border and title background are skinned, but the content area, background, border, and title text are not. */
+        static private const exclusions:Array = ["background", "titleDisplay", "contentGroup", "controlBarGroup", "border"];
+			
+		/* exclusions before Flex 4.5 for backwards-compatibility purposes */
+		static private const exclusions_4_0:Array = ["background", "titleDisplay", "contentGroup", "controlBarGroup"];
+		
+		/**
+		 * @private
+		 */
+		override public function get colorizeExclusions():Array 
+		{
+			// Since border is styleable via borderColor, no need to allow chromeColor to affect
+			// the border.  This is wrapped in a compatibility flag since this change was added  
+			// in Flex 4.5
+			if (FlexVersion.compatibilityVersion < FlexVersion.VERSION_4_5)
+			{
+				return exclusions_4_0;
+			}
+			
+			return exclusions;
+		}
+        
+        /**
+         * @private
+         */
+        override protected function initializationComplete():void
+        {
+            useChromeColor = true;
+            super.initializationComplete();
+        }
+        
+        /**
+         * @private
+         */
+        override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
+        {            
+            
+            var cr:Number = getStyle("cornerRadius");
+            var withControls:Boolean = 
+                (currentState == "disabledWithControlBar" || 
+                 currentState == "normalWithControlBar");
+            
+            if (cornerRadius != cr)
+            {
+                cornerRadius = cr;
+                
+                
+                setPartCornerRadii(topMaskRect, withControls); 
+                setPartCornerRadii(background, withControls);                
+            }
+            
+            if (bottomMaskRect) setPartCornerRadii(bottomMaskRect, withControls); 
+            backgroundFill.color = getStyle("backgroundColor");
+            backgroundFill.alpha = getStyle("backgroundAlpha");
+            
+            super.updateDisplayList(unscaledWidth, unscaledHeight);
+        }
+        
+        /**
+         * @private
+         */  
+        private function setPartCornerRadii(target:Rect, includeBottom:Boolean):void
+        {            
+            target.topLeftRadiusX = cornerRadius;
+            target.topRightRadiusX = cornerRadius;
+            target.bottomLeftRadiusX = includeBottom ? cornerRadius : 0;
+            target.bottomRightRadiusX = includeBottom ? cornerRadius : 0;
+        }
+
+        private var cornerRadius:Number;
+		]]>
+    </fx:Script>
+    
+    <s:states>
+        <s:State name="normal"/>
+        <s:State name="disabled"/>
+        <s:State name="normalWithControlBar" stateGroups="withControls"/>
+        <s:State name="disabledWithControlBar" stateGroups="withControls"/>
+    </s:states>
+    
+    <!-- drop shadow can't be hittable so it stays sibling of other graphics -->
+    
+    
+    <!-- drop shadow can't be hittable so all other graphics go in this group -->
+    <s:Group left="0" right="0" top="0" bottom="0">
+        <s:Group left="0" top="0" right="0" bottom="0" id="topGroupMask">
+            <s:Rect id="topMaskRect" left="0" top="0" right="0" bottom="0">
+                <s:fill>
+                    <s:SolidColor alpha="0"/>
+                </s:fill>
+            </s:Rect>
+        </s:Group>
+        <s:Group left="0" top="0" right="0" bottom="0" id="bottomGroupMask" 
+                 includeIn="normalWithControlBar, disabledWithControlBar">
+            <s:Rect id="bottomMaskRect" left="0" top="0" right="0" bottom="0">
+                <s:fill>
+                    <s:SolidColor alpha="0"/>
+                </s:fill>
+            </s:Rect>
+        </s:Group>
+
+        <s:Group id="sideGroup" mask="{topGroupMask}" rotation="270" top="0" height="100%">
+            <s:Label id="titleDisplay" maxDisplayedLines="1"
+				left="6" right="3" top="0" bottom="0" minHeight="18"
+				verticalAlign="middle" textAlign="start" fontSize="14">
+            </s:Label>
+        </s:Group>
+
+		<s:Group left="18" right="0" top="0" bottom="0" id="contents">
+			<s:Rect id="background" top="0" width="100%" height="100%">
+				<s:fill>
+					<s:SolidColor id="backgroundFill" color="#f5f5f5"/>
+				</s:fill>
+				<s:stroke>
+					<s:SolidColorStroke weight="1" color="#bbbbbb"/>
+				</s:stroke>
+			</s:Rect>
+
+			<s:Group top="1" left="1" right="1" bottom="1" width="100%" height="100%">
+				<s:layout>
+					<s:VerticalLayout gap="0" horizontalAlign="justify"/>
+				</s:layout>
+
+				<s:Group id="contentGroup" height="100%" minWidth="0" minHeight="0"/>
+				
+				<s:Group id="bottomGroup" minWidth="0" minHeight="0"
+						 includeIn="normalWithControlBar, disabledWithControlBar">					
+					<s:Group id="controlBarGroup" left="0" right="0" top="0" bottom="0" minWidth="0" minHeight="0">
+						<s:layout>
+							<s:HorizontalLayout gap="10"/>
+						</s:layout>
+					</s:Group>
+				</s:Group>
+			</s:Group>
+        </s:Group>
+    </s:Group>
+</s:SparkSkin>
